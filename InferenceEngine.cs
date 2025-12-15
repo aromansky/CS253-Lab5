@@ -162,11 +162,10 @@ namespace CS253_Lab5
             }
 
             List<string> explanationLog = new List<string>();
-            Queue<string> resQueue = new Queue<string>();
 
             if (knownFacts.Contains(kb.TargetFactId))
             {
-                resQueue.Enqueue($"Факт f{kb.TargetFactId} доказан.");
+                explanationLog.Add($"Факт f{kb.TargetFactId} доказан.");
 
                 HashSet<int> visitedFacts = new HashSet<int>();
                 // id факта и глубина
@@ -181,14 +180,17 @@ namespace CS253_Lab5
 
                     visitedFacts.Add(factId);
 
-                    foreach (int id in provenance[factId].PremiseFactsIds)
-                        factStack.Push((id, depth + 1));
-
                     Rule rule = provenance[factId];
-                    resQueue.Enqueue("  ".Repeat(depth) + $"Сработало правило {rule.ID}: Так как известны {string.Join(", ", rule.PremiseFactsIds)}, получен факт {rule.ConclusionFactId}");
+                    var premises = rule.PremiseFactsIds.ToList();
+                    for (int i = premises.Count - 1; i >= 0; i--)
+                    {
+                        factStack.Push((premises[i], depth + 1));
+                    }
+
+                    explanationLog.Add("  ".Repeat(depth) + $"Сработало правило {rule.ID}: Так как известны {string.Join(", ", rule.PremiseFactsIds)}, получен факт {rule.ConclusionFactId}");
                 }
 
-                while (resQueue.Count != 0) explanationLog.Add(resQueue.Dequeue());
+                
             }
             else
             {
