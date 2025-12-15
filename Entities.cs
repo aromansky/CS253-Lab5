@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace CS253_Lab5
 
                     int id = int.Parse(parts[0][1..]);
                     string description = parts[1];
-                    double confidence = double.Parse(parts[2]);
+                    double confidence = double.Parse(parts[2], CultureInfo.InvariantCulture);
                     Facts.Add(new Fact(id, description, confidence));
                 }
             }
@@ -95,7 +96,7 @@ namespace CS253_Lab5
                     List<int> premiseFactsIds = parts[1].Split(',').Select(x => int.Parse(x[1..])).ToList();
                     int conclusionFactId = int.Parse(parts[2][1..]);
                     string description = parts[3];
-                    double confidence = double.Parse(parts[4]);
+                    double confidence = double.Parse(parts[4], CultureInfo.InvariantCulture);
                     Rules.Add(new Rule(id, premiseFactsIds, conclusionFactId, description, confidence));
                 }
             }
